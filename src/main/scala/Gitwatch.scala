@@ -1,28 +1,24 @@
 import java.io.{IOException, File}
 import collection.jcl.Conversions._
-import org.spearce.jgit.lib.{Commit, Repository}
+import org.spearce.jgit.lib.{Commit => GitCommit, Repository}
 import scapps.JSON
 import scapps.Id._
 
-case class JsonCommit(id: String,
-                      parents: List[String],
-                      timestamp: Int,
-                      y: Int,
-                      author: String,
-                      committer: String,
-                      message: String,
-                      size: Float)
+case class Commit(id: String,
+                  parents: List[String],
+                  timestamp: Int,
+                  y: Int,
+                  author: String,
+                  committer: String,
+                  message: String,
+                  size: Float)
 
-/**
- * TODO: Class comment.
- */
 object Gitwatch {
-  def history(repo: Repository)(c: Commit): List[Commit] =
+  def history(repo: Repository)(c: GitCommit): List[GitCommit] =
     List.fromArray(c.getParentIds).map(repo.mapCommit(_)) match {
       case Nil => c :: Nil
       case parents => c :: parents.flatMap(history(repo)(_))
     }
-
 
   def toJson(gitDir: String): String = {
     try {
@@ -31,8 +27,8 @@ object Gitwatch {
       val refs = repo.getAllRefs
 
       val head = repo.mapCommit("HEAD")
-      val his: List[Commit] = history(repo)(head)
-      val mappedHistory = his.map((c: Commit) => {
+      val his: List[GitCommit] = history(repo)(head)
+      val mappedHistory = his.map((c: GitCommit) => {
 	    Map("id" -> c.getCommitId.name,
             "parents" -> List.fromArray(c.getParentIds.toArray).map(_.name),
             "timestamp" -> c.getAuthor.getWhen.getTime / 1000,

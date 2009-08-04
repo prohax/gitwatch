@@ -36,5 +36,5 @@ data = {
 if @commits[commit_id]
   @commits[commit_id].attributes.update(new.attributes)
 else
-  @commits[commit_id] = 
+  @commits[commit_id] =
 end
