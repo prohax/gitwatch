@@ -77,9 +77,9 @@ object GrapherTest extends Specification {
   }
 
   "grapher main" should {
-//    "maintain an empty input" in {
-//        Grapher.graph(List[Node](), "missing")
-//    }
+    //    "maintain an empty input" in {
+    //        Grapher.graph(List[Node](), "missing")
+    //    }
     "maintain a single input" in {
       val graph = Grapher.graph(single, "a")
       graph must beEqualTo(single.map(GraphedNode(_, 0)))
@@ -102,6 +102,54 @@ object GrapherTest extends Specification {
         GraphedNode(a, 0),
         GraphedNode(b, 1),
         GraphedNode(c, 0)
+        ))
+    }
+    "rejoin a branch" in {
+      val branchBack = List(
+        Node("a", Nil, 1000),
+        Node("b", List("a"), 1001),
+        Node("c", List("a"), 1002),
+        Node("d", List("b", "c"), 1003))
+      val List(a, b, c, d) = branchBack
+      Grapher.graph(branchBack, "d") must haveSameElementsAs(List(
+        GraphedNode(a, 0),
+        GraphedNode(b, 0),
+        GraphedNode(c, 1),
+        GraphedNode(d, 0)
+        ))
+    }
+    "rejoin a bigger branch" in {
+      val branchBack = List(
+        Node("a", Nil, 1000),
+        Node("b", List("a"), 1001),
+        Node("c", List("a"), 1002),
+        Node("d", List("c"), 1002),
+        Node("e", List("d"), 1002),
+        Node("f", List("b", "e"), 1003))
+      val List(a, b, c, d, e, f) = branchBack
+      Grapher.graph(branchBack, "f") must haveSameElementsAs(List(
+        GraphedNode(a, 0),
+        GraphedNode(b, 0),
+        GraphedNode(c, 1),
+        GraphedNode(d, 1),
+        GraphedNode(e, 1),
+        GraphedNode(f, 0)
+        ))
+    }
+    "display a mergeless branch" in {
+      val branchBack = List(
+        Node("a", Nil, 1000),
+        Node("b", List("a"), 1001),
+        Node("c", List("a"), 1002),
+        Node("d", List("c"), 1002),
+        Node("e", List("d"), 1002))
+      val List(a, b, c, d, e) = branchBack
+      Grapher.graph(branchBack, "b") must haveSameElementsAs(List(
+        GraphedNode(a, 0),
+        GraphedNode(b, 0),
+        GraphedNode(c, 1),
+        GraphedNode(d, 1),
+        GraphedNode(e, 1)
         ))
     }
   }
