@@ -86,11 +86,11 @@ object GrapherTest extends Specification {
     }
     "maintain a single trunk" in {
       val graph = Grapher.graph(trunkOnly, "c")
-      graph must beEqualTo(trunkOnly.map(GraphedNode(_, 0)))
+      graph must haveSameElementsAs(trunkOnly.map(GraphedNode(_, 0)))
     }
     "lift a branch" in {
       val List(a, b, c) = brancher
-      Grapher.graph(brancher, "b") must beEqualTo(List(
+      Grapher.graph(brancher, "b") must haveSameElementsAs(List(
         GraphedNode(a, 0),
         GraphedNode(b, 0),
         GraphedNode(c, 1)

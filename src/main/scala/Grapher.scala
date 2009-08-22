@@ -32,6 +32,6 @@ object Grapher {
     val forwardMap = forwardGraph(cs)
     implicit val both = (commits, forwardMap)
 
-    drawBack(commits(master)).reverse
+    drawBack(commits(master))
   }
 }
