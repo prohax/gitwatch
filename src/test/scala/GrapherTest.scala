@@ -152,5 +152,45 @@ object GrapherTest extends Specification {
         GraphedNode(e, 1)
         ))
     }
+    "display a double merge" in {
+      val branchBack = List(
+        Node("a", Nil, 1000),
+        Node("b", List("a"), 1001),
+        Node("c", List("a"), 1002),
+        Node("d", List("c"), 1002),
+        Node("e", List("d"), 1002),
+        Node("f", List("c"), 1002),
+        Node("g", List("f"), 1002))
+      val List(a, b, c, d, e, f, g) = branchBack
+      Grapher.graph(branchBack, "b") must haveSameElementsAs(List(
+        GraphedNode(a, 0),
+        GraphedNode(b, 0),
+        GraphedNode(c, 1),
+        GraphedNode(d, 1),
+        GraphedNode(e, 1),
+        GraphedNode(f, 2),
+        GraphedNode(g, 2)
+        ))
+    }
+    "buffer two branches" in {
+      val branchBack = List(
+        Node("a", Nil, 1000),
+        Node("b", List("a"), 1001),
+        Node("c", List("a"), 1002),
+        Node("d", List("c"), 1002),
+        Node("e", List("d"), 1002),
+        Node("f", List("c"), 1002),
+        Node("g", List("f"), 1002))
+      val List(a, b, c, d, e, f, g) = branchBack
+      Grapher.graph(branchBack, "b") must haveSameElementsAs(List(
+        GraphedNode(a, 0),
+        GraphedNode(b, 0),
+        GraphedNode(c, 1),
+        GraphedNode(d, 1),
+        GraphedNode(e, 1),
+        GraphedNode(f, 2),
+        GraphedNode(g, 2)
+        ))
+    }
   }
 }
