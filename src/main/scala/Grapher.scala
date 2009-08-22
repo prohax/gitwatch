@@ -4,6 +4,38 @@ import collection.mutable.ArrayBuffer
 case class Node(id: String, parents: List[String], timestamp: Int)
 case class GraphedNode(node: Node, y: Int)
 
+class StatefulGrapher(commits: Map[String, Node], forwardMap: Map[String, List[Node]]) {
+  val seen = new ArrayBuffer[Node]
+
+  def graph(level: Int, current: Node): List[GraphedNode] = {
+    if (seen.contains(current)) {
+      Nil
+    } else {
+      println("      --  current = " + current)
+      println("      --  level = " + level)
+      seen += current
+      //dirty mutation
+      val branches = new ArrayBuffer[Node]()
+      val merges = new ArrayBuffer[String]()
+      val results = new ArrayBuffer[GraphedNode]()
+      results append GraphedNode(current, level)
+      forwardMap.getOrElse(current.id, Nil) match {
+        case Nil => ()
+        case head :: tail => branches appendAll tail
+      }
+      current.parents match {
+        case Nil => ()
+        case head :: tail => {
+          results appendAll graph(level,commits(head))
+          merges appendAll tail
+        }
+      }
+      println("      --  branches = " + branches)
+      results appendAll branches.flatMap(graph(level+1,_))
+      results.toList
+    }
+  }
+}
 
 object Grapher {
   private def add(map: Map[String, List[Node]], head: Node, parent: String) = {
@@ -23,41 +55,19 @@ object Grapher {
     }
   }
 
-  def drawBack(node: Node)(implicit env: (Map[String,Node], Map[String, List[Node]])): List[GraphedNode] = {
+  def drawBack(node: Node)(implicit env: (Map[String, Node], Map[String, List[Node]])): List[GraphedNode] = {
     println("      --  node = " + node)
     GraphedNode(node, 0) :: node.parents.take(1).flatMap((parent) => drawBack(env._1(parent)))
   }
 
   def graph(cs: List[Node], master: String): List[GraphedNode] = {
-    val commits = cs.foldLeft(Map[String, Node]())((m,c) => m + (c.id -> c))
+    val commits = cs.foldLeft(Map[String, Node]())((m, c) => m + (c.id -> c))
     val forwardMap = forwardGraph(cs)
     println("      --  forwardMap = " + forwardMap)
-    implicit val both = (commits, forwardMap)
 
+    implicit val both = (commits, forwardMap)
     //    drawBack(commits(master))
 
-    //dirty mutation
-    val trunk = new ArrayBuffer[GraphedNode]()
-    val branches = new ArrayBuffer[Node]()
-    val merges = new ArrayBuffer[String]()
-
-    var go = true
-    var current = commits(master)
-    while(go) {
-      trunk.append(GraphedNode(current, 0))
-      forwardMap.getOrElse(current.id, Nil) match {
-        case Nil => ()
-        case head :: tail => branches appendAll tail
-      }
-      current.parents match {
-        case Nil => go = false
-        case head :: tail => {
-          current = commits(head)
-          merges appendAll tail
-        }
-      }
-    }
-
-    trunk.toList
+    new StatefulGrapher(commits, forwardMap).graph(0, commits(master)).toList
   }
 }
