@@ -21,7 +21,6 @@ object Gitwatch {
     }
 
   def toJson(gitDir: String): String = {
-    try {
       val g = new File(gitDir)
       val repo = new Repository(g)
       val refs = repo.getAllRefs
@@ -42,14 +41,11 @@ object Gitwatch {
             "author" -> gitCommits(g.node.id).getAuthor.getName,
             "committer" -> gitCommits(g.node.id).getCommitter.getName,
             "message" -> gitCommits(g.node.id).getMessage.replaceAll("\n","\\n"),
-            "size" -> repo.openObject(repo.resolve(g.node.id)).getBytes
+            "size" -> repo.openObject(repo.resolve(g.node.id)).getBytes.length
         )
       })
 /*      println(mappedHistory)*/
       val json : String = Map("data" -> mappedHistory).jsonString
       json
-    } catch {
-      case e => e.toString
-    }
   }
 }
