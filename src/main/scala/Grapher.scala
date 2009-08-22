@@ -18,7 +18,7 @@ object Grapher {
         if (head.parents.isEmpty) {
           map + ("INIT" -> List(head))
         } else {
-          map
+          map + (head.parents.first -> List(head))
         }
       }
     }

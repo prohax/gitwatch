@@ -20,10 +20,14 @@ object GrapherTest extends Specification {
         "INIT" -> List(a)
         ))
     }
-    //    "maintain a single trunk" in {
-    //      val List(a, b, c) = trunkOnly
-    //      Grapher.forwardMap(trunkOnly) must beEqualTo(trunkOnly.map(GraphedNode(_, 0)))
-    //    }
+    "maintain a single trunk" in {
+      val List(a, b, c) = trunkOnly
+      Grapher.recursiveGrouper(trunkOnly) must beEqualTo(Map(
+        "INIT" -> List(a),
+        "a" -> List(b),
+        "b" -> List(c)
+        ))
+    }
   }
 
   "grapher main" should {
