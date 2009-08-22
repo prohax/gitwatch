@@ -28,14 +28,19 @@ object Gitwatch {
 
       val head = repo.mapCommit("HEAD")
       val his: List[GitCommit] = history(repo)(head)
-      val mappedHistory = his.map((c: GitCommit) => {
-	    Map("id" -> c.getCommitId.name,
-            "parents" -> List.fromArray(c.getParentIds.toArray).map(_.name),
-            "timestamp" -> c.getAuthor.getWhen.getTime / 1000,
-            "y" -> 0,
-            "author" -> c.getAuthor.getName,
-            "committer" -> c.getCommitter.getName,
-            "message" -> c.getMessage,
+      val gitCommits = his.foldLeft(Map[String,GitCommit]())((m,c) => m + (c.getCommitId.name -> c))
+      val graph = Grapher.graph(his.map((c) => Node(
+        c.getCommitId.name,
+        List.fromArray(c.getParentIds.toArray).map(_.name),
+        c.getAuthor.getWhen.getTime / 1000)), head.getCommitId.name)
+      val mappedHistory = graph.map((g: GraphedNode) => {
+	    Map("id" -> g.node.id,
+            "parents" -> g.node.parents,
+            "timestamp" -> g.node.timestamp,
+            "y" -> g.y,
+            "author" -> gitCommits(g.node.id).getAuthor.getName,
+            "committer" -> gitCommits(g.node.id).getCommitter.getName,
+            "message" -> gitCommits(g.node.id).getMessage.replace('\n',' '),
             "size" -> 0.0
         )
       })
