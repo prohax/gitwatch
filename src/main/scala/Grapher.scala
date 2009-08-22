@@ -7,6 +7,12 @@ case class GraphedNode(node: Node, y: Int)
 class StatefulGrapher(commits: Map[String, Node], forwardMap: Map[String, List[Node]]) {
   val seen = new ArrayBuffer[Node]
 
+  def toHead(node: Node): Node = forwardMap.get(node.id) match {
+    case None => node
+    case Some(Nil) => node
+    case Some(head :: tail) => toHead(head)
+  }
+
   def graph(level: Int, current: Node): List[GraphedNode] = {
     if (seen.contains(current)) {
       Nil
@@ -29,7 +35,9 @@ class StatefulGrapher(commits: Map[String, Node], forwardMap: Map[String, List[N
         }
       }
       results appendAll merges.flatMap((c) => graph(level+1,commits(c)))
-      results appendAll branches.flatMap(graph(level+1,_))
+      results appendAll branches.flatMap((c) => {
+        graph(level+1,toHead(c))
+      })
       results.toList
     }
   }

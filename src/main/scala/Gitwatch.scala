@@ -33,6 +33,7 @@ object Gitwatch {
         c.getCommitId.name,
         List.fromArray(c.getParentIds.toArray).map(_.name),
         c.getAuthor.getWhen.getTime / 1000)), head.getCommitId.name)
+        println(repo.openObject(repo.resolve("HEAD")).getBytes)
       val mappedHistory = graph.map((g: GraphedNode) => {
 	    Map("id" -> g.node.id,
             "parents" -> g.node.parents,
@@ -40,8 +41,8 @@ object Gitwatch {
             "y" -> g.y,
             "author" -> gitCommits(g.node.id).getAuthor.getName,
             "committer" -> gitCommits(g.node.id).getCommitter.getName,
-            "message" -> gitCommits(g.node.id).getMessage.replace('\n',' '),
-            "size" -> 0.0
+            "message" -> gitCommits(g.node.id).getMessage.replaceAll("\n","\\n"),
+            "size" -> repo.openObject(repo.resolve(g.node.id)).getBytes
         )
       })
 /*      println(mappedHistory)*/
