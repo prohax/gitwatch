@@ -1,0 +1,37 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  color: #ddd;
+  background-color: #222;
+  font: 14px/2 Helvetica, sans-serif;
+}
+
+li {
+  list-style-type: none;
+}
+
+.commits {
+  margin: 0 1em;
+}
+
+.commit {
+  font-family: Menlo, Monaco, 'Lucida Console', monospace;
+}
+
+.commit .id {
+  padding-right: 1em;
+}
+
+.commit .message {
+  color: #777;
+}
+
+#message {
+  color: #3c3;
+}
+#message.error {
+  color: #c33;
+}
