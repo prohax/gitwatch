@@ -1,3 +1,4 @@
+import scala.Random
 import org.specs._
 
 object GrapherTest extends Specification {
@@ -17,6 +18,16 @@ object GrapherTest extends Specification {
     Node("a", Nil, 1000),
     Node("b", Nil, 1001),
     Node("c", List("a", "b"), 1002))
+
+  val ambitious = Node("a", Nil, 1001) ::
+          Node("e", List("d", "h"), 1001) ::
+          Node("d", List("g", "c"), 1002) :: List(
+    ("b", "a"),
+    ("c", "b"),
+    ("f", "b"),
+    ("g", "f"),
+    ("h", "f")
+    ).map((x) => Node(x._1, List(x._2), 1000))
 
   "forward mapper" should {
     "maintain an empty input" in {
@@ -51,6 +62,19 @@ object GrapherTest extends Specification {
         "INIT" -> List(a, b),
         "a" -> List(c),
         "b" -> List(c)
+        ))
+    }
+    "handle an ambitious case" in {
+      val List(a, e, d, b, c, f, g, h) = ambitious
+      Grapher.recursiveGrouper(ambitious) must beEqualTo(Map(
+        "INIT" -> List(a),
+        "a" -> List(b),
+        "b" -> List(c, f),
+        "c" -> List(d),
+        "d" -> List(e),
+        "f" -> List(g, h),
+        "g" -> List(d),
+        "h" -> List(e)
         ))
     }
   }
