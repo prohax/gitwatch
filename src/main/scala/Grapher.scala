@@ -17,9 +17,12 @@ object Grapher {
         val map = recursiveGrouper(tail)
         val parents = head.parents
         val result = if (parents.isEmpty) {
-          map + ("INIT" -> List(head))
+          map + ("INIT" -> (head :: map.get("INIT").getOrElse(Nil)))
         } else {
-          map + (parents.first -> (head :: map.get(head.parents.first).getOrElse(Nil)))
+          parents.foldLeft(map)((m, s) => {
+          m + (s -> (head :: m.get(s).getOrElse(Nil)))
+          })
+
         }
         println("      --  result = " + result)
         result
