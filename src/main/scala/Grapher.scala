@@ -5,32 +5,33 @@ case class GraphedNode(node: Node, y: Int)
 
 
 object Grapher {
-  def recursiveGrouper(cs: List[Node]): Map[String, List[Node]] = {
-    println("      --  cs = " + cs)
-    cs match {
-      case Nil => {
-        println("      -- hello")
-        Map("INIT" -> Nil)
-      }
-      case head :: tail => {
-        println("      --  head = " + head)
-        val map = recursiveGrouper(tail)
-        val parents = head.parents
-        val result = if (parents.isEmpty) {
-          map + ("INIT" -> (head :: map.get("INIT").getOrElse(Nil)))
-        } else {
-          parents.foldLeft(map)((m, s) => {
-          m + (s -> (head :: m.get(s).getOrElse(Nil)))
-          })
+  private def add(map: Map[String, List[Node]], head: Node, parent: String) = {
+    map + (parent -> (head :: map.get(parent).getOrElse(Nil)))
+  }
 
-        }
-        println("      --  result = " + result)
-        result
+  def forwardGraph(cs: List[Node]): Map[String, List[Node]] = cs match {
+    case Nil => {
+      Map("INIT" -> Nil)
+    }
+    case head :: tail => {
+      val map = forwardGraph(tail)
+      head.parents match {
+        case Nil => add(map, head, "INIT")
+        case parents => parents.foldLeft(map)((m, s) => add(m, head, s))
       }
     }
   }
 
-  def graph(cs: List[Node]): List[GraphedNode] = {
-    cs.map(GraphedNode(_, 0))
+  def drawBack(node: Node)(implicit env: (Map[String,Node], Map[String, List[Node]])): List[GraphedNode] = {
+    println("      --  node = " + node)
+    GraphedNode(node, 0) :: node.parents.take(1).flatMap((parent) => drawBack(env._1(parent)))
+  }
+
+  def graph(cs: List[Node], master: String): List[GraphedNode] = {
+    val commits = cs.foldLeft(Map[String, Node]())((m,c) => m + (c.id -> c))
+    val forwardMap = forwardGraph(cs)
+    implicit val both = (commits, forwardMap)
+
+    drawBack(commits(master)).reverse
   }
 }
