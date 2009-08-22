@@ -96,5 +96,13 @@ object GrapherTest extends Specification {
         GraphedNode(c, 1)
         ))
     }
+    "lift a merge" in {
+      val List(a, b, c) = merger
+      Grapher.graph(merger, "c") must haveSameElementsAs(List(
+        GraphedNode(a, 0),
+        GraphedNode(b, 1),
+        GraphedNode(c, 0)
+        ))
+    }
   }
 }

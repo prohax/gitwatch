@@ -31,6 +31,7 @@ class StatefulGrapher(commits: Map[String, Node], forwardMap: Map[String, List[N
         }
       }
       println("      --  branches = " + branches)
+      results appendAll merges.flatMap((c) => graph(level+1,commits(c)))
       results appendAll branches.flatMap(graph(level+1,_))
       results.toList
     }
