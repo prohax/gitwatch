@@ -8,6 +8,11 @@ object GrapherTest extends Specification {
     Node("b", List("a"), 1001),
     Node("c", List("b"), 1002))
 
+  val brancher = List(
+    Node("a", Nil, 1000),
+    Node("b", List("a"), 1001),
+    Node("c", List("a"), 1002))
+
   "forward mapper" should {
     "maintain an empty input" in {
       Grapher.recursiveGrouper(Nil) must beEqualTo(Map(
@@ -26,6 +31,13 @@ object GrapherTest extends Specification {
         "INIT" -> List(a),
         "a" -> List(b),
         "b" -> List(c)
+        ))
+    }
+    "handle a branch" in {
+      val List(a, b, c) = brancher
+      Grapher.recursiveGrouper(brancher) must beEqualTo(Map(
+        "INIT" -> List(a),
+        "a" -> List(b, c)
         ))
     }
   }

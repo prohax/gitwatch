@@ -15,11 +15,14 @@ object Grapher {
       case head :: tail => {
         println("      --  head = " + head)
         val map = recursiveGrouper(tail)
-        if (head.parents.isEmpty) {
+        val parents = head.parents
+        val result = if (parents.isEmpty) {
           map + ("INIT" -> List(head))
         } else {
-          map + (head.parents.first -> List(head))
+          map + (parents.first -> (head :: map.get(head.parents.first).getOrElse(Nil)))
         }
+        println("      --  result = " + result)
+        result
       }
     }
   }
