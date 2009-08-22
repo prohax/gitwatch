@@ -17,6 +17,7 @@
     <orderEntry type="library" name="scala" level="application" />
     <orderEntry type="library" name="specs" level="project" />
     <orderEntry type="library" name="jgit" level="project" />
+    <orderEntry type="library" name="scapps" level="project" />
   </component>
 </module>
 

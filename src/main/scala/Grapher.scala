@@ -5,18 +5,23 @@ case class GraphedNode(node: Node, y: Int)
 
 
 object Grapher {
-  def recursiveGrouper(cs: List[Node]): Map[String, List[Node]] = cs match {
-    case Nil => Map("INIT" -> Nil)
-    case head :: tail => {
-      val map = recursiveGrouper(tail)
-      map + (head.id -> List[Node]())
+  def recursiveGrouper(cs: List[Node]): Map[String, List[Node]] = {
+    println("      --  cs = " + cs)
+    cs match {
+      case Nil => {
+        println("      -- hello")
+        Map("INIT" -> Nil)
+      }
+      case head :: tail => {
+        println("      --  head = " + head)
+        val map = recursiveGrouper(tail)
+        if (head.parents.isEmpty) {
+          map + ("INIT" -> List(head))
+        } else {
+          map
+        }
+      }
     }
-  }
-
-  def forwardMap(cs: List[Node]) = {
-    val map: Map[String, List[Node]] = new HashMap[String, List[Node]]
-//    cs.foldLeft(map)((m: Map[String, List[Node]], n: Node) => m ++ (n.id -> m))
-        map
   }
 
   def graph(cs: List[Node]): List[GraphedNode] = {

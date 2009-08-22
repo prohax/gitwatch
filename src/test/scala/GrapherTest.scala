@@ -8,23 +8,23 @@ object GrapherTest extends Specification {
     Node("b", List("a"), 1001),
     Node("c", List("b"), 1002))
 
- "forward mapper" should {
-   "maintain an empty input" in {
-     Grapher.recursiveGrouper(Nil) must beEqualTo(Map(
-       "INIT" -> Nil
-       ))
-   }
-//    "maintain a single input" in {
-//      val List(a) = single
-//      Grapher.forwardMap(single) must beEqualTo(Map(
-//        "INIT" -> List(a)
-//        ))
-//    }
-//    "maintain a single trunk" in {
-//      val List(a, b, c) = trunkOnly
-//      Grapher.forwardMap(trunkOnly) must beEqualTo(trunkOnly.map(GraphedNode(_, 0)))
-//    }
- }
+  "forward mapper" should {
+    "maintain an empty input" in {
+      Grapher.recursiveGrouper(Nil) must beEqualTo(Map(
+        "INIT" -> Nil
+        ))
+    }
+    "maintain a single input" in {
+      val List(a) = single
+      Grapher.recursiveGrouper(single) must beEqualTo(Map(
+        "INIT" -> List(a)
+        ))
+    }
+    //    "maintain a single trunk" in {
+    //      val List(a, b, c) = trunkOnly
+    //      Grapher.forwardMap(trunkOnly) must beEqualTo(trunkOnly.map(GraphedNode(_, 0)))
+    //    }
+  }
 
   "grapher main" should {
     "maintain an empty input" in {
