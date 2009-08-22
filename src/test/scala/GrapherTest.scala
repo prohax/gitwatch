@@ -7,13 +7,13 @@ object GrapherTest extends Specification {
     Node("a", Nil, 1000),
     Node("b", List("a"), 1001),
     Node("c", List("b"), 1002))
-//
-//  "forward mapper" should {
-//    "maintain an empty input" in {
-//      Grapher.forwardMap(Nil) must beEqualTo(Map(
-//        "INIT" -> Nil
-//        ))
-//    }
+
+ "forward mapper" should {
+   "maintain an empty input" in {
+     Grapher.recursiveGrouper(Nil) must beEqualTo(Map(
+       "INIT" -> Nil
+       ))
+   }
 //    "maintain a single input" in {
 //      val List(a) = single
 //      Grapher.forwardMap(single) must beEqualTo(Map(
@@ -24,7 +24,7 @@ object GrapherTest extends Specification {
 //      val List(a, b, c) = trunkOnly
 //      Grapher.forwardMap(trunkOnly) must beEqualTo(trunkOnly.map(GraphedNode(_, 0)))
 //    }
-//  }
+ }
 
   "grapher main" should {
     "maintain an empty input" in {
