@@ -1,4 +1,5 @@
 import collection.immutable.HashMap
+import collection.mutable.ArrayBuffer
 
 case class Node(id: String, parents: List[String], timestamp: Int)
 case class GraphedNode(node: Node, y: Int)
@@ -30,8 +31,33 @@ object Grapher {
   def graph(cs: List[Node], master: String): List[GraphedNode] = {
     val commits = cs.foldLeft(Map[String, Node]())((m,c) => m + (c.id -> c))
     val forwardMap = forwardGraph(cs)
+    println("      --  forwardMap = " + forwardMap)
     implicit val both = (commits, forwardMap)
 
-    drawBack(commits(master))
+    //    drawBack(commits(master))
+
+    //dirty mutation
+    val trunk = new ArrayBuffer[GraphedNode]()
+    val branches = new ArrayBuffer[Node]()
+    val merges = new ArrayBuffer[String]()
+
+    var go = true
+    var current = commits(master)
+    while(go) {
+      trunk.append(GraphedNode(current, 0))
+      forwardMap.getOrElse(current.id, Nil) match {
+        case Nil => ()
+        case head :: tail => branches appendAll tail
+      }
+      current.parents match {
+        case Nil => go = false
+        case head :: tail => {
+          current = commits(head)
+          merges appendAll tail
+        }
+      }
+    }
+
+    trunk.toList
   }
 }
