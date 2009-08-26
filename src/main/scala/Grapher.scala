@@ -8,7 +8,7 @@ class HeightMap {
   val state = new ArrayBuffer[(Int,Range)]
 
   def add(height: Int, from: Long, to: Long) {
-    state +=((height, from.asInstanceOf[Int] until to.asInstanceOf[Int]))
+    state +=((height, from.asInstanceOf[Int] until to.asInstanceOf[Int] + 1))
     println("      --  height = " + height)
     println("      --  from = " + from)
     println("      --  to = " + to)

@@ -172,26 +172,26 @@ object GrapherTest extends Specification {
         GraphedNode(g, 2)
         ))
     }
-//    "buffer two branches" in {
-//      val branchBack = List(
-//        Node("a", Nil, 1000),
-//        Node("b", List("a"), 1004),
-//        Node("c", List("b"), 1008),
-//        Node("d", List("b"), 1006),
-//        Node("e", List("d"), 1008),
-//        Node("f", List("a"), 1002),
-//        Node("g", List("f"), 1008))
-//      val List(a, b, c, d, e, f, g) = branchBack
-//      Grapher.graph(branchBack, "c") must haveSameElementsAs(List(
-//        GraphedNode(a, 0),
-//        GraphedNode(b, 0),
-//        GraphedNode(c, 0),
-//        GraphedNode(d, 1),
-//        GraphedNode(e, 1),
-//        GraphedNode(f, 2),
-//        GraphedNode(g, 2)
-//        ))
-//    }
+    "buffer two branches" in {
+      val branchBack = List(
+        Node("a", Nil, 1000),
+        Node("b", List("a"), 1004),
+        Node("c", List("b"), 1010),
+        Node("d", List("b"), 1006),
+        Node("e", List("d"), 1008),
+        Node("f", List("a"), 1002),
+        Node("g", List("f"), 1007))
+      val List(a, b, c, d, e, f, g) = branchBack
+      Grapher.graph(branchBack, "c") must haveSameElementsAs(List(
+        GraphedNode(a, 0),
+        GraphedNode(b, 0),
+        GraphedNode(c, 0),
+        GraphedNode(d, 1),
+        GraphedNode(e, 1),
+        GraphedNode(f, 2),
+        GraphedNode(g, 2)
+        ))
+    }
   }
 
   "heightmap" should {
