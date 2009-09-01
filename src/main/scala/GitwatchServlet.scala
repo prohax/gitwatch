@@ -18,15 +18,15 @@ class GitwatchServlet extends Step {
     contentType = "text/html"
   }
 
-  get("/:repo/initial.json") {
+  get("/:repo/initial") {
     "initial"
   }
 
-  get("/:repo/update.json") {
+  get("/:repo/update") {
     "update"
   }
 
-  get("/:repo") {
+  get("/:repo/") {
     MainLogic.baseHtml(params(":repo"))
   }
 
