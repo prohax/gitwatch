@@ -1,4 +1,3 @@
-
 object MainLogic {
   def baseHtml(repo: String) = {
     <html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
@@ -9,7 +8,7 @@ object MainLogic {
         <link href="/stylesheets/styles.css" media="screen" rel="stylesheet" type="text/css" />
         <script src="/javascripts/jquery.js" type="text/javascript"></script>
         <script src="/javascripts/raphael.js" type="text/javascript"></script>
-        <script src="/javascripts/test.js" type="text/javascript"></script>
+        <script src="/javascripts/gitwatch.js" type="text/javascript"></script>
       </head>
       <body>
         {repo_body(repo)}

@@ -138,7 +138,7 @@ var onUpdateError = function(req, textStatus, errorThrown) {
 var update = function() {
   $.ajax({
     type: "GET",
-    url: "gitwatch.json",
+    url: document.location.pathname + "initial",
     dataType: "json",
     success: onUpdateSuccess,
     error: onUpdateError
