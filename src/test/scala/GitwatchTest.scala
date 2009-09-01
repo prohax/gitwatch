@@ -1,4 +1,5 @@
 import org.specs._
+import scala.io.Source
 
 object GitwatchTest extends Specification {
   "gitwatch main" should {
@@ -8,15 +9,9 @@ object GitwatchTest extends Specification {
     }
     "test" in {
       val p = Runtime.getRuntime.exec("git rev-list HEAD")
-      val in = p.getInputStream
-      var ch = in.read
-      val sb = new StringBuffer(512)
-      while (ch != -1) {
-        sb.append(ch.asInstanceOf[Char])
-        ch = in.read
-      }
-      println(sb.toString)
-      sb.toString must_!= ""
+      val output = Source.fromInputStream(p.getInputStream).getLines.mkString
+      println(output)
+      output must_!= ""
     }
   }
 }
