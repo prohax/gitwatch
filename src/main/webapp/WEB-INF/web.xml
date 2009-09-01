@@ -6,12 +6,12 @@
 <web-app>
 
   <servlet>
-    <servlet-name>TemplateExample</servlet-name>
+    <servlet-name>Gitwatch</servlet-name>
     <servlet-class>GitwatchServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>TemplateExample</servlet-name>
+    <servlet-name>Gitwatch</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
