@@ -4,8 +4,27 @@ import collection.mutable.ArrayBuffer
 case class Node(id: String, parents: List[String], timestamp: Long)
 case class GraphedNode(node: Node, y: Int)
 
+class HeightMap {
+  val state = new ArrayBuffer[(Int,Range)]
+
+  def add(height: Int, from: Long, to: Long) {
+    state +=((height, from.asInstanceOf[Int] until to.asInstanceOf[Int] + 1))
+//    println("      --  height = " + height)
+//    println("      --  from = " + from)
+//    println("      --  to = " + to)
+  }
+
+  def currentMax(time: Long) = {
+    val max = Iterable.max(0 :: state.filter(_._2 contains time).map(_._1).toList)
+//    println("      --  time = " + time)
+//    println("      --  max = " + max)
+    max
+  }
+}
+
 class StatefulGrapher(commits: Map[String, Node], forwardMap: Map[String, List[Node]]) {
   val seen = new ArrayBuffer[Node]
+  val heightMap = new HeightMap
 
   def toHead(node: Node): Node = forwardMap.get(node.id) match {
     case None => node
@@ -36,7 +55,10 @@ class StatefulGrapher(commits: Map[String, Node], forwardMap: Map[String, List[N
       }
       results appendAll merges.flatMap((c) => graph(level+1,commits(c)))
       results appendAll branches.flatMap((c) => {
-        graph(level+1,toHead(c))
+        val node = toHead(c)
+        val height = heightMap.currentMax(node.timestamp)
+        heightMap.add(height+1, c.timestamp, node.timestamp)
+        graph(height+1,node)
       })
       results.toList
     }
