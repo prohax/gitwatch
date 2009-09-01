@@ -6,10 +6,10 @@ object MainLogic {
         <meta content='text/html; charset=utf-8' http-equiv='Content-Type' />
         <title>{repo} &mdash; Gitwatch</title>
 
-        <link href="styles.css" media="screen" rel="stylesheet" type="text/css" />
-        <script src="jquery.js" type="text/javascript"></script>
-        <script src="raphael.js" type="text/javascript"></script>
-        <script src="test.js" type="text/javascript"></script>
+        <link href="/stylesheets/styles.css" media="screen" rel="stylesheet" type="text/css" />
+        <script src="/javascripts/jquery.js" type="text/javascript"></script>
+        <script src="/javascripts/raphael.js" type="text/javascript"></script>
+        <script src="/javascripts/test.js" type="text/javascript"></script>
       </head>
       <body>
         {repo_body(repo)}
