@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="libs">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib" />
+      <root url="file://$PROJECT_DIR$/lib/scalaz-4.0-p1" />
+      <root url="file://$PROJECT_DIR$/lib_managed" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/scalaz-4.0-p1/scalaz-4.0-p1-src.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jgit_src.zip!/" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/scalaz-4.0-p1" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed" recursive="false" />
+  </library>
+</component>

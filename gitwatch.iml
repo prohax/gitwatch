@@ -18,6 +18,8 @@
     <orderEntry type="library" name="specs" level="project" />
     <orderEntry type="library" name="jgit" level="project" />
     <orderEntry type="library" name="scapps" level="project" />
+    <orderEntry type="library" name="sbt-0.5.1" level="project" />
+    <orderEntry type="library" name="libs" level="project" />
   </component>
 </module>
 
