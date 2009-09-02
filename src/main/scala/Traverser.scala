@@ -21,7 +21,7 @@ class Traverser(repo: Repository) {
 }
 
 object Traverser {
-  def history(repo: Repository, c: GitCommit): List[GitCommit] = {
-    (new Traverser(repo)).traverseAll(List(c))
+  def history(repo: Repository, head: GitCommit): List[GitCommit] = {
+    (new Traverser(repo)).traverseAll(List(head))
   }
 }
