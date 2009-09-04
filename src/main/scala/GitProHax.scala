@@ -1,4 +1,5 @@
 import collection.mutable.{ArrayBuffer, HashSet, Queue, HashMap}
+import collection.jcl.{HashMap => JclHashMap}
 import java.io.File
 import org.spearce.jgit.lib.{Commit => GitCommit, Repository}
 
@@ -41,9 +42,10 @@ class GitProHax(repo: Repository) {
 }
 
 object GitProHax {
-  def run(gitDir: String) = {
+  def run(gitDir: String, master: String) = {
     val repo = new Repository(new File(gitDir))
-    val head = repo.mapCommit("HEAD")
+    val branches = collection.jcl.Map(repo.getAllRefs)
+    val head = repo.mapCommit(branches(master).getObjectId)
     val graphedCommits = new GitProHax(repo).graph(head, Nil)
     graphedCommits.map(g => (g.c.getCommitId.name.substring(0,7), g.y)).mkString("\n")
   }
