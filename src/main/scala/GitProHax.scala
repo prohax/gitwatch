@@ -12,7 +12,7 @@ class GitProHax(repo: Repository) {
   //needs to be a priority queue
   val mergesQueue = new Queue[(String, Int)]
 
-  def graph(head: GitCommit, branches: List[GitCommit]): List[GraphedCommit] = {
+  def graph(head: GitCommit, branches: Seq[GitCommit]): List[GraphedCommit] = {
     renderBack(head, 0)
     println(heightMap)
     mergesQueue.foreach(t => renderBack(repo.mapCommit(t._1), t._2))
@@ -46,7 +46,7 @@ object GitProHax {
     val repo = new Repository(new File(gitDir))
     val branches = collection.jcl.Map(repo.getAllRefs)
     val head = repo.mapCommit(branches(master).getObjectId)
-    val graphedCommits = new GitProHax(repo).graph(head, Nil)
+    val graphedCommits = new GitProHax(repo).graph(head, branches.values.map(x => repo.mapCommit(x.getObjectId)).toList)
     graphedCommits.map(g => (g.c.getCommitId.name.substring(0,7), g.y)).mkString("\n")
   }
 }
