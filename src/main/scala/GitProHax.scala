@@ -13,8 +13,9 @@ class GitProHax(repo: Repository) {
 
   def graph(head: GitCommit, branches: List[GitCommit]): List[GraphedCommit] = {
     renderBack(head, 0)
+    println(heightMap)
     mergesQueue.foreach(t => renderBack(repo.mapCommit(t._1), t._2))
-
+    println(heightMap)
     graph.toList
   }
 
@@ -28,11 +29,15 @@ class GitProHax(repo: Repository) {
           mergesQueue ++= tail.map((_, y + 1))
           seen += id
           graph += GraphedCommit(c, y)
-          renderBack(repo.mapCommit(head), y)
+          val parent = repo.mapCommit(head)
+          heightMap.add(y, timeOf(parent), timeOf(c))
+          renderBack(parent, y)
         }
       }
     }
   }
+
+  private def timeOf(c: GitCommit) = c.getCommitter.getWhen.getTime / 1000
 }
 
 object GitProHax {
