@@ -18,8 +18,10 @@ class GitProHax(repo: Repository) {
     mergesQueue.foreach(t => renderBack(repo.mapCommit(t._1), t._2))
     println(heightMap)
 
-    val branchesByBranchTime = new TreeMap[Long,GitCommit]() ++ branches.map(b => (timeOf(findSeenParent(b)), b))
-    println(branchesByBranchTime)
+    val branchesByBranchTime = branches.map(b => (timeOf(findSeenParent(b)), b)).sort((a,b) => a._1 > b._1)
+//    branchesByBranchTime.foreach(x => {
+//
+//    })
 
     seen.values.toList.sort((a,b) => timeOf(a.c) < timeOf(b.c))
   }
@@ -27,8 +29,7 @@ class GitProHax(repo: Repository) {
   def renderBack(c: GitCommit, y: Int) {
     val id = c.getCommitId.name
     if (!(seen contains id)) {
-      val parents = List.fromArray(c.getParentIds.toArray).map(_.name)
-      parents match {
+      parents(c) match {
         case Nil => ()
         case head :: tail => {
           mergesQueue ++= tail.map((_, y + 1))
@@ -41,11 +42,13 @@ class GitProHax(repo: Repository) {
     }
   }
 
-  def findSeenParent(c: GitCommit) : GitCommit = {
-    c
+  def findSeenParent(c: GitCommit) : GitCommit = parents(c) match {
+    case Nil => c
+    case head :: tail => findSeenParent(repo.mapCommit(head))
   }
 
   private def timeOf(c: GitCommit) = c.getCommitter.getWhen.getTime / 1000
+  private def parents(c: GitCommit) : List[String] = List.fromArray(c.getParentIds.toArray).map(_.name)
 }
 
 object GitProHax {
@@ -53,7 +56,8 @@ object GitProHax {
     val repo = new Repository(new File(gitDir))
     val branches = JclMap(repo.getAllRefs)
     val head = repo.mapCommit(branches(master).getObjectId)
-    val graphedCommits = new GitProHax(repo).graph(head, branches.values.map(x => repo.mapCommit(x.getObjectId)).toList)
+    val branchHeads = branches.values.map(x => repo.mapCommit(x.getObjectId)).toList
+    val graphedCommits = new GitProHax(repo).graph(head, branchHeads)
     graphedCommits.map(g => (g.c.getCommitId.name.substring(0,7), g.y)).mkString("\n")
   }
 }
