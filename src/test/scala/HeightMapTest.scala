@@ -6,26 +6,36 @@ object HeightMapTest extends Specification {
   "heightmap" should {
     "say no" in {
       val h = new HeightMap()
-      h currentMax 0L must beEqualTo(0)
-      h currentMax 10L must beEqualTo(0)
-      h currentMax -5L must beEqualTo(0)
+      h heightAt 0L must beEqualTo(0)
+      h heightAt 10L must beEqualTo(0)
+      h heightAt -5L must beEqualTo(0)
     }
     "say yes for a single" in {
       val h = new HeightMap()
       h.add(1, 0L, 10L)
-      h currentMax 0L must beEqualTo(1)
-      h currentMax 10L must beEqualTo(1)
-      h currentMax -5L must beEqualTo(0)
+      h heightAt 0L must beEqualTo(1)
+      h heightAt 10L must beEqualTo(1)
+      h heightAt -5L must beEqualTo(0)
     }
-//    "say yes for two" in {
-//      val h = new HeightMap()
-//      h.add(1, 0L, 10L)
-//      h.add(2, 5L, 12L)
-//      h currentMax 0L must beEqualTo(1)
-//      h currentMax 4L must beEqualTo(1)
-//      h currentMax 5L must beEqualTo(2)
-//      h currentMax 11L must beEqualTo(2)
-//      h currentMax -5L must beEqualTo(0)
-//    }
+    "say yes for two" in {
+      val h = new HeightMap()
+      h.add(1, 0L, 10L)
+      h.add(2, 5L, 12L)
+      h heightAt 0L must beEqualTo(1)
+      h heightAt 4L must beEqualTo(1)
+      h heightAt 5L must beEqualTo(2)
+      h heightAt 11L must beEqualTo(2)
+      h heightAt -5L must beEqualTo(0)
+    }
+    "should work for ranges" in {
+      val h = new HeightMap()
+      h.add(1, 0L, 10L)
+      h.add(2, 5L, 12L)
+      h heightWithin (-5 until -2) must beEqualTo(0)
+      h heightWithin (-5 until 2) must beEqualTo(1)
+      h heightWithin (2 until 4) must beEqualTo(1)
+      h heightWithin (2 until 7) must beEqualTo(2)
+      h heightWithin (-10 until 20) must beEqualTo(2)
+    }
   }
 }

@@ -10,7 +10,12 @@ class HeightMap {
     //    println("      --  to = " + to)
   }
 
-  def currentMax(time: Long) = Iterable.max(0 :: state.filter(_._2 contains time).map(_._1).toList)
+  def heightAt(time: Long) = Iterable.max(0 :: state.filter(_._2 contains time).map(_._1).toList)
+
+  def heightWithin(range: Range) = {
+    //lolperformance
+    Iterable.max(0 :: range.map(heightAt(_)).toList)
+  }
 
   override def toString = {
     if (state.isEmpty) "" else {

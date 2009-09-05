@@ -38,7 +38,7 @@ class StatefulGrapher(commits: Map[String, Node], forwardMap: Map[String, List[N
       results appendAll merges.flatMap((c) => graph(level+1,commits(c)))
       results appendAll branches.flatMap((c) => {
         val node = toHead(c)
-        val height = heightMap.currentMax(node.timestamp)
+        val height = heightMap.heightAt(node.timestamp)
         heightMap.add(height+1, c.timestamp, node.timestamp)
         graph(height+1,node)
       })
