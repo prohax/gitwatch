@@ -1,0 +1,19 @@
+<component name="libraryTable">
+  <library name="libs">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib" />
+      <root url="file://$PROJECT_DIR$/lib_managed" />
+      <root url="file://$PROJECT_DIR$/project/boot/scala-2.7.5/sbt-0.5.1" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib/specs-docs-1.5.0.zip!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/jgit_src.zip!/" />
+      <root url="file:///Users/glen/src/scalaz/src/main/scala" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/project/boot/scala-2.7.5/sbt-0.5.1" recursive="false" />
+  </library>
+</component>

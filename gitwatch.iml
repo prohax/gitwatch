@@ -15,9 +15,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="scala" level="application" />
-    <orderEntry type="library" name="specs" level="project" />
-    <orderEntry type="library" name="jgit" level="project" />
-    <orderEntry type="library" name="scapps" level="project" />
+    <orderEntry type="library" name="libs" level="project" />
   </component>
 </module>
 
