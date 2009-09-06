@@ -38,4 +38,23 @@ object HeightMapTest extends Specification {
       h heightWithin (-10 until 20) must beEqualTo(2)
     }
   }
+  "overlap" should {
+    "work for equal ranges" in {
+      HeightMap.overlap(1 until 10, 1 until 10) must beTrue
+      HeightMap.overlap(3 until 4, 3 until 4) must beTrue
+    }
+    "work for distinct ranges" in {
+      HeightMap.overlap(1 until 4, 5 until 10) must beFalse
+      HeightMap.overlap(10 until 11, 5 until 9) must beFalse
+    }
+    "work for overlaps" in {
+      HeightMap.overlap(3 until 8, 7 until 9) must beTrue
+      HeightMap.overlap(2 until 4, 1 until 3) must beTrue
+      HeightMap.overlap(1 until 4, 4 until 10) must beTrue
+    }
+    "work for inclusions" in {
+      HeightMap.overlap(3 until 4, 1 until 10) must beTrue
+      HeightMap.overlap(3 until 8, 5 until 7) must beTrue
+    }
+  }
 }

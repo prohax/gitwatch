@@ -43,3 +43,9 @@ class HeightMap {
     }
   }
 }
+
+object HeightMap {
+  def overlap(a: Range, b: Range) = {
+    b.contains(a.start) || b.contains(a.end) || a.contains(b.start) || a.contains(b.end)
+  }
+}
