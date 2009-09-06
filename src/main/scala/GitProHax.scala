@@ -13,6 +13,8 @@ class GitProHax(repo: Repository) {
   val mergesQueue = new Queue[(String, Int)]
 
   def graph(head: GitCommit, branches: List[GitCommit]): List[GraphedCommit] = {
+    //not needed, but handy for debugging:
+    heightMap.add(0, timeOf(findSeenParent(head)), timeOf(head))
     renderBack(head, 0)
     println(heightMap)
     mergesQueue.foreach(t => {
@@ -25,10 +27,12 @@ class GitProHax(repo: Repository) {
     val branchesByBranchTime = branches.map(b => (timeOf(findSeenParent(b)), b)).sort((a, b) => a._1 > b._1)
     branchesByBranchTime.foreach(x => {
       println("      --  x._2.getCommitId.name = " + x._2.getCommitId.name)
-      val height = heightMap heightWithin (x._1.asInstanceOf[Int] until timeOf(x._2).asInstanceOf[Int])
+      val height = 1 + heightMap.heightWithin(x._1.asInstanceOf[Int] until timeOf(x._2).asInstanceOf[Int])
       println("      --  height = " + height)
       renderBack(x._2, height)
+      heightMap.add(height, x._1, timeOf(x._2))
     })
+    println(heightMap)
 
     seen.values.toList.sort((a, b) => timeOf(a.c) < timeOf(b.c))
   }
@@ -68,6 +72,6 @@ object GitProHax {
     val head = repo.mapCommit(branches(master).getObjectId)
     val branchHeads = branches.values.map(x => repo.mapCommit(x.getObjectId)).toList
     val graphedCommits = new GitProHax(repo).graph(head, branchHeads)
-    graphedCommits.map(g => (g.c.getCommitId.name.substring(0, 7), g.y)).mkString("\n")
+    graphedCommits.map(g => (g.c.getCommitId.name.substring(0, 7), g.y)).mkString(" - ")
   }
 }

@@ -1,6 +1,7 @@
 import collection.mutable.ArrayBuffer
 
 class HeightMap {
+  import HeightMap._
   val state = new ArrayBuffer[(Int, Range)]
 
   def add(height: Int, from: Long, to: Long) {
@@ -13,8 +14,7 @@ class HeightMap {
   def heightAt(time: Long) = Iterable.max(0 :: state.filter(_._2 contains time).map(_._1).toList)
 
   def heightWithin(range: Range) = {
-    //lolperformance
-    Iterable.max(0 :: range.map(heightAt(_)).toList)
+    Iterable.max(0 :: state.filter(x => overlap(x._2, range)).map(_._1).toList)
   }
 
   override def toString = {
