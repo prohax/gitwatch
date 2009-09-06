@@ -6,7 +6,7 @@ class GitwatchServlet extends Step {
 
   get("/:repo/initial") {
     contentType = "application/json"
-    Gitwatch.toJson("/Users/glen/src/" + params(":repo") + "/.git")
+    GitProHax.run("/Users/glen/src/" + params(":repo") + "/.git", "refs/heads/master")
   }
 
   get("/:repo/update") {

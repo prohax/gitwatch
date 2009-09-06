@@ -3,10 +3,14 @@ import collection.mutable.{ArrayBuffer, HashSet, Queue, HashMap}
 import java.io.File
 import org.spearce.jgit.lib.{Commit => GitCommit, Repository}
 import collection.jcl.{Map => JclMap}
+import scapps.JSON
+import scapps.Id._
 
 case class GraphedCommit(c: GitCommit, y: Int)
 
 class GitProHax(repo: Repository) {
+  import GitProHax._
+
   val seen = new HashMap[String, GraphedCommit]
   val heightMap = new HeightMap
   //needs to be a priority queue
@@ -60,18 +64,34 @@ class GitProHax(repo: Repository) {
     }
   }
 
-  private def timeOf(c: GitCommit) = c.getCommitter.getWhen.getTime / 1000
-
-  private def parents(c: GitCommit): List[String] = List.fromArray(c.getParentIds.toArray).map(_.name)
 }
 
 object GitProHax {
   def run(gitDir: String, master: String) = {
     val repo = new Repository(new File(gitDir))
     val branches = JclMap(repo.getAllRefs)
-    val head = repo.mapCommit(branches(master).getObjectId)
-    val branchHeads = branches.values.map(x => repo.mapCommit(x.getObjectId)).toList
-    val graphedCommits = new GitProHax(repo).graph(head, branchHeads)
-    graphedCommits.map(g => (g.c.getCommitId.name.substring(0, 7), g.y)).mkString(" - ")
+    Map("data" -> {
+      if (!branches.contains(master)) "" else {
+        val head = repo.mapCommit(branches(master).getObjectId)
+        val branchHeads = branches.values.map(x => repo.mapCommit(x.getObjectId)).toList
+        val graphedCommits = new GitProHax(repo).graph(head, branchHeads)
+        //    graphedCommits.map(g => (g.c.getCommitId.name.substring(0, 7), g.y)).mkString(" - ")
+
+        graphedCommits.map(g => Map(
+          "id" -> g.c.getCommitId.name,
+          "parents" -> parents(g.c),
+          "timestamp" -> timeOf(g.c),
+          "y" -> g.y,
+          "author" -> g.c.getAuthor.getName,
+          "committer" -> g.c.getCommitter.getName,
+          "message" -> g.c.getMessage.replaceAll("\n", " "),
+          "size" -> repo.openObject(repo.resolve(g.c.getCommitId.name)).getBytes.length
+          )).jsonString
+      }
+    })
   }
+
+  def parents(c: GitCommit): List[String] = List.fromArray(c.getParentIds.toArray).map(_.name)
+
+  def timeOf(c: GitCommit) = c.getCommitter.getWhen.getTime / 1000
 }
