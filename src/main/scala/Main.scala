@@ -9,4 +9,4 @@ object Main {
       }
     }
   }
-}
+}lol
