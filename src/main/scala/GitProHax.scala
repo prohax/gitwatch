@@ -6,6 +6,11 @@ import collection.jcl.{Map => JclMap}
 import scapps.JSON
 import scapps.Id._
 
+import scala.xml.Elem
+import scalaz.http.response._
+import scalaz.http.request._
+import View._, ViewHelpers._
+
 case class GraphedCommit(c: GitCommit, y: Int)
 
 class GitProHax(repo: Repository) {
@@ -89,6 +94,13 @@ object GitProHax {
           )).jsonString
       }
     })
+  }
+
+  def toJson(gitDir: String, master: String)(request: Request[Stream]): Option[Response[Stream]] = {
+    implicit val r = request
+    implicit val header: Option[Elem] = None
+
+    Some(jsonResponse(OK, run(gitDir, master)))
   }
 
   def parents(c: GitCommit): List[String] = List.fromArray(c.getParentIds.toArray).map(_.name)

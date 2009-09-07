@@ -138,7 +138,7 @@ var onUpdateError = function(req, textStatus, errorThrown) {
 var update = function() {
   $.ajax({
     type: "GET",
-    url: document.location.pathname + "initial",
+    url: document.location.pathname + "initial.json",
     dataType: "json",
     success: onUpdateSuccess,
     error: onUpdateError

@@ -1,6 +1,14 @@
+import scala.xml.Elem
+import scalaz.http.response._
+import scalaz.http.request._
+import View._, ViewHelpers._
+
 object MainLogic {
-  def baseHtml(repo: String) = {
-    <html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+  def baseHtml(repo: String)(request: Request[Stream]): Option[Response[Stream]] = {
+    implicit val r = request
+    implicit val header: Option[Elem] = None
+
+    Some(htmlResponse(OK, <html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
       <head>
         <meta content='text/html; charset=utf-8' http-equiv='Content-Type' />
         <title>{repo} &mdash; Gitwatch</title>
@@ -13,7 +21,7 @@ object MainLogic {
       <body>
         {repo_body(repo)}
       </body>
-    </html>
+    </html>))
   }
 
   def repo_body(repo: String) = {

@@ -5,19 +5,18 @@ import scalaz.http.request._
 import scalaz.http.scapps.Route._
 import scalaz.http.scapps.Scapps._
 import scalaz.http.scapps.{BaseApp, Route}
-import Web._ 
+import Web._
 
 final class GitwatchServlet extends BaseApp {
   val routes: Kleisli[Option, Request[Stream], Response[Stream]] =
-      List(
-        exactPath("/") >=> GET >=> webRoot _
-/*        startsWith("/api") >=> List(
-          exactPath("/") >=> GET >=> apiUsage _,
-          startsWith("/register") >=> POST >=> apiRegister _,
-          startsWith("/registrants") >=> GET >=> apiRegistrants _,
-          startsWith("/search") >=> GET >=> apiSearch _
-        )
-*/    )
+    (exactPath("/") >=> GET >=> webRoot _) ::
+/*    (startsWith("/g") >=> GET >=> MainLogic.baseHtml("gitwatch") _) ::*/
+    List("gitwatch", "step", "babushka").map(repo => {
+      startsWith("/" + repo) >=> List(
+        exactPath("/initial.json") >=> GET >=> GitProHax.toJson(repo, "refs/heads/master") _,
+        exactPath("/") >=> GET >=> MainLogic.baseHtml(repo) _
+      )
+    })
 
   def route(implicit request: Request[Stream], servletRequest: HttpServletRequest) = routes(request)
 }
