@@ -35,11 +35,14 @@ class GitProHax(repo: Repository) {
 
     val branchesByBranchTime = branches.map(b => (timeOf(findSeenParent(b)), b)).sort((a, b) => a._1 > b._1)
     branchesByBranchTime.foreach(x => {
-      println("      --  x._2.getCommitId.name = " + x._2.getCommitId.name)
-      val height = 1 + heightMap.heightWithin(x._1.asInstanceOf[Int] until timeOf(x._2).asInstanceOf[Int])
-      println("      --  height = " + height)
-      renderBack(x._2, height)
-      heightMap.add(height, x._1, timeOf(x._2))
+      val id = x._2.getCommitId.name
+      if (!seen.contains(id)) {
+        println("      --  x._2.getCommitId.name = " + id)
+        val height = 1 + heightMap.heightWithin(x._1.asInstanceOf[Int] until timeOf(x._2).asInstanceOf[Int])
+        println("      --  height = " + height)
+        renderBack(x._2, height)
+        heightMap.add(height, x._1, timeOf(x._2))
+      }
     })
     println(heightMap)
 
