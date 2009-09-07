@@ -4,15 +4,16 @@
   "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
 
 <web-app>
-
-  <servlet>
-    <servlet-name>Gitwatch</servlet-name>
-    <servlet-class>GitwatchServlet</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>Gitwatch</servlet-name>
-    <url-pattern>/*</url-pattern>
-  </servlet-mapping>
-
+    <servlet>
+        <servlet-name>Scalaz</servlet-name>
+        <servlet-class>scalaz.http.servlet.StreamStreamServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>GitwatchServlet</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Scalaz</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
 </web-app>
