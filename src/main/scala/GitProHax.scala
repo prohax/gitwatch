@@ -76,7 +76,7 @@ object GitProHax {
     val repo = new Repository(new File(gitDir))
     val branches = JclMap(repo.getAllRefs)
     Map("data" -> {
-      if (!branches.contains(master)) "" else {
+      if (!branches.contains(master)) Nil else {
         val head = repo.mapCommit(branches(master).getObjectId)
         val branchHeads = branches.values.map(x => repo.mapCommit(x.getObjectId)).toList
         val graphedCommits = new GitProHax(repo).graph(head, branchHeads)
@@ -91,7 +91,7 @@ object GitProHax {
           "committer" -> g.c.getCommitter.getName,
           "message" -> g.c.getMessage.replaceAll("\n", " "),
           "size" -> repo.openObject(repo.resolve(g.c.getCommitId.name)).getBytes.length
-          )).jsonString
+          ))
       }
     })
   }
@@ -100,7 +100,7 @@ object GitProHax {
     implicit val r = request
     implicit val header: Option[Elem] = None
 
-    Some(jsonResponse(OK, run(gitDir, master)))
+    Some(jsonResponse(OK, run("repos/" + gitDir + ".git", master)))
   }
 
   def parents(c: GitCommit): List[String] = List.fromArray(c.getParentIds.toArray).map(_.name)
